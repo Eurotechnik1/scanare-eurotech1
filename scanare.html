@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eurotechnik Scan</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    body {
+      background-color: #0f4c75;
+      color: white;
+      text-align: center;
+      font-family: sans-serif;
+      margin: 0;
+    }
+    header {
+      background-color: #1b262c;
+      padding: 15px;
+    }
+    video {
+      width: 85%;
+      max-width: 420px;
+      border: 2px solid #3282b8;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+    button {
+      background-color: #3282b8;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      margin-top: 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #rezultat {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <header><h1>📦 Eurotechnik Scan</h1></header>
+
+  <main>
+    <video id="camera" autoplay playsinline></video>
+    <div id="rezultat">Scanează un cod QR...</div>
+    <button id="pornesteCamera">Pornește camera</button>
+  </main>
+
+  <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+  <script>
+    const btn = document.getElementById("pornesteCamera");
+    const rezultat = document.getElementById("rezultat");
+    let scanner = null;
+
+    async function startCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+        if (scanner) await scanner.stop();
+
+        scanner = new Html5Qrcode("camera");
+        await scanner.start(
+          { facingMode: "environment" },
+          { fps: 10, qrbox: { width: 250, height: 250 } },
+          (decodedText) => {
+            rezultat.innerHTML = "✅ Cod scanat: <b>" + decodedText + "</b>";
+            scanner.stop();
+          },
+          (error) => {}
+        );
+      } catch (err) {
+        rezultat.innerHTML = "❌ Accesul la cameră este blocat. Activează camera pentru browser.";
+        console.error(err);
+      }
+    }
+
+    btn.addEventListener("click", startCamera);
+
+    // Înregistrează service worker
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js");
+    }
+  </script>
+</body>
+</html>
