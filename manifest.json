@@ -1,0 +1,20 @@
+{
+  "name": "Eurotechnik Scan",
+  "short_name": "Scan Eurotech",
+  "start_url": "scanare.html",
+  "display": "standalone",
+  "background_color": "#0f4c75",
+  "theme_color": "#1b262c",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
